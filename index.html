@@ -527,6 +527,78 @@
     }
 
     .hidden { display: none; }
+    /* Mobile-only layout adjustments. Existing colors, fonts and backgrounds are intentionally untouched. */
+    @media (max-width: 680px) {
+      body {
+        padding: 10px;
+      }
+
+      .app {
+        width: 100%;
+        max-height: none;
+      }
+
+      #startScreen {
+        padding: 20px 14px 14px;
+      }
+
+      .difficulty-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .difficulty-copy {
+        min-height: 108px;
+      }
+
+      .difficulty-desc {
+        overflow-wrap: anywhere;
+      }
+
+      .actions.center .btn {
+        min-width: min(260px, 100%);
+      }
+
+      .app.quiz-mode {
+        height: auto;
+        min-height: calc(100dvh - 20px);
+        overflow: visible;
+      }
+
+      .app.quiz-mode #quizScreen:not(.hidden) {
+        overflow: visible;
+      }
+
+      .app.quiz-mode #quizScreen .meta {
+        flex-wrap: wrap;
+      }
+
+      .app.quiz-mode #quizScreen .progress-card {
+        flex-basis: 100%;
+      }
+
+      .app.quiz-mode #quizScreen .question {
+        overflow-wrap: anywhere;
+      }
+
+      .app.quiz-mode #quizScreen .choice {
+        min-height: 52px;
+        padding-top: 12px;
+        padding-bottom: 12px;
+        overflow-wrap: anywhere;
+      }
+
+      .app.quiz-mode #quizScreen .actions.between {
+        gap: 8px;
+      }
+
+      .app.quiz-mode #quizScreen .actions.between .btn {
+        flex: 1 1 100%;
+      }
+    }
+
+    .result-head {
+      justify-content: center;
+    }
   </style>
 </head>
 <body>
@@ -598,7 +670,7 @@
             <div class="progress" aria-label="進捗">
               <div id="progressFill" class="progress-fill"></div>
             </div>
-            <div class="progress-label"><span id="qNum">1</span>/<span id="qTotal">10</span></div>
+            <div class="progress-label"><span id="qNum">1</span>/<span id="qTotal">5</span></div>
           </div>
         </div>
       </div>
@@ -681,7 +753,10 @@
     let activeQuestions = [];
 
     let dataReady = false;
-    const defaultTotal = questionSets.standard ? questionSets.standard.length : 10;
+    const QUESTIONS_PER_QUIZ = 5;
+    const defaultTotal = questionSets.standard
+      ? Math.min(questionSets.standard.length, QUESTIONS_PER_QUIZ)
+      : QUESTIONS_PER_QUIZ;
     qTotal.textContent = String(defaultTotal);
     startBtn.disabled = true;
 
@@ -714,7 +789,9 @@
     function setQuestionSource(nextQuestionSets, nextDifficultyLabels) {
       questionSets = nextQuestionSets;
       difficultyLabels = nextDifficultyLabels || difficultyLabels;
-      const total = questionSets.standard ? questionSets.standard.length : 10;
+      const total = questionSets.standard
+        ? Math.min(questionSets.standard.length, QUESTIONS_PER_QUIZ)
+        : QUESTIONS_PER_QUIZ;
       qTotal.textContent = String(total);
       dataReady = true;
       updateStartState();
@@ -966,10 +1043,11 @@
       }
 
       activeQuestions = [...questionSets[selectedDifficulty]];
-      order = [...Array(activeQuestions.length)].map((_, i) => i);
       if (selectedDifficulty === "beginner") {
-        order = shuffle(order);
+        activeQuestions = shuffle(activeQuestions);
       }
+      activeQuestions = activeQuestions.slice(0, QUESTIONS_PER_QUIZ);
+      order = [...Array(activeQuestions.length)].map((_, i) => i);
       current = 0;
       score = 0;
       correct = 0;
