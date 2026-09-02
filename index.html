@@ -399,6 +399,10 @@
       color: #20465b;
     }
 
+    .quiz-body-zone .actions.between .btn.primary {
+      min-width: 136px;
+    }
+
     .center { text-align: center; padding: 28px 8px 8px; }
     .center h2 { margin: 0 0 8px; font-size: 1.45rem; }
 
@@ -526,6 +530,24 @@
       margin-top: 0;
     }
 
+    .app:not(.start-mode) .top-intro .sub {
+      display: none;
+    }
+
+    .app.quiz-mode .top-intro,
+    .app.result-mode .top-intro {
+      width: auto;
+      margin: 0;
+    }
+
+    .app.quiz-mode .top,
+    .app.result-mode .top {
+      width: 100%;
+      margin: 0;
+      padding-top: 8px;
+      padding-bottom: 6px;
+    }
+
     .hidden { display: none; }
     /* Mobile-only layout adjustments. Existing colors, fonts and backgrounds are intentionally untouched. */
     @media (max-width: 680px) {
@@ -596,13 +618,39 @@
       }
     }
 
+    @media (orientation: landscape) and (max-height: 600px) {
+      .app.quiz-mode {
+        height: auto;
+        min-height: calc(100dvh - 20px);
+        overflow: visible;
+      }
+
+      .app.quiz-mode #quizScreen:not(.hidden) {
+        overflow: visible;
+      }
+
+      .app.quiz-mode #quizScreen .quiz-body-zone {
+        overflow: visible;
+      }
+
+      .app.quiz-mode #quizScreen .choices {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .app.quiz-mode #quizScreen .choice {
+        min-height: 48px;
+        padding-top: 8px;
+        padding-bottom: 8px;
+      }
+    }
+
     .result-head {
       justify-content: center;
     }
   </style>
 </head>
 <body>
-  <main class="app">
+  <main class="app start-mode">
     <section class="top">
       <div class="top-intro">
         <h1 class="title">PRIDEクイズチャレンジ</h1>
@@ -686,7 +734,7 @@
 
         <div class="actions between">
           <button id="backToStartBtn" class="btn ghost" data-testid="back-to-start-button">開始画面に戻る</button>
-          <button id="nextBtn" class="btn ghost hidden" data-testid="next-button">次の問題へ</button>
+          <button id="nextBtn" class="btn primary hidden" data-testid="next-button">次の問題へ</button>
         </div>
       </div>
     </section>
@@ -778,7 +826,9 @@
       quizScreen.classList.add("hidden");
       resultScreen.classList.add("hidden");
       screen.classList.remove("hidden");
+      appRoot.classList.toggle("start-mode", screen === startScreen);
       appRoot.classList.toggle("quiz-mode", screen === quizScreen);
+      appRoot.classList.toggle("result-mode", screen === resultScreen);
     }
 
     function updateStartState() {
@@ -953,6 +1003,8 @@
     function showFeedback(isCorrect, explainText) {
       explainEl.textContent = explainText;
       feedbackEl.style.display = "block";
+      const isLastQuestion = current >= activeQuestions.length - 1;
+      nextBtn.textContent = isLastQuestion ? "結果を見る" : "次の問題へ";
       nextBtn.classList.remove("hidden");
     }
 
@@ -982,6 +1034,7 @@
       answered = false;
       feedbackEl.style.display = "none";
       nextBtn.classList.add("hidden");
+      nextBtn.textContent = "次の問題へ";
 
       const base = activeQuestions[order[current]];
       const shuffledChoices = shuffle(
@@ -1036,17 +1089,19 @@
       renderQuestion();
     }
 
-    function startGame() {
+    function startGame(options = {}) {
       updateStartState();
       if (!selectedDifficulty || !questionSets[selectedDifficulty]) {
         return;
       }
 
-      activeQuestions = [...questionSets[selectedDifficulty]];
-      if (selectedDifficulty === "beginner") {
-        activeQuestions = shuffle(activeQuestions);
+      const reuseQuestions = options.reshuffle === false && activeQuestions.length > 0;
+      if (reuseQuestions) {
+        activeQuestions = [...activeQuestions];
+      } else {
+        activeQuestions = shuffle([...questionSets[selectedDifficulty]]);
+        activeQuestions = activeQuestions.slice(0, QUESTIONS_PER_QUIZ);
       }
-      activeQuestions = activeQuestions.slice(0, QUESTIONS_PER_QUIZ);
       order = [...Array(activeQuestions.length)].map((_, i) => i);
       current = 0;
       score = 0;
@@ -1082,7 +1137,7 @@
       input.addEventListener("change", updateStartState);
     });
     startBtn.addEventListener("click", startGame);
-    retryBtn.addEventListener("click", startGame);
+    retryBtn.addEventListener("click", () => startGame({ reshuffle: false }));
     toStartBtn.addEventListener("click", () => setView(startScreen));
     backToStartBtn.addEventListener("click", () => setView(startScreen));
     nextBtn.addEventListener("click", nextQuestion);
