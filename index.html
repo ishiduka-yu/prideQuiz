@@ -168,6 +168,7 @@
 
     .difficulty-copy {
       display: block;
+      position: relative;
       height: 100%;
       border: 1px solid var(--line);
       border-radius: 14px;
@@ -183,10 +184,45 @@
       box-shadow: 0 8px 14px rgba(15, 23, 42, 0.05);
     }
 
+    .difficulty-option.difficulty-beginner .difficulty-copy {
+      background: #e7f5fb;
+      border-color: #c8e5f0;
+    }
+
+    .difficulty-option.difficulty-standard .difficulty-copy {
+      background: #fff1dc;
+      border-color: #f1d5aa;
+    }
+
+    .difficulty-option.difficulty-advanced .difficulty-copy {
+      background: #f0e7ff;
+      border-color: #d9c6f5;
+    }
+
     .difficulty-radio:checked + .difficulty-copy {
       border-color: #7aa7bf;
       background: linear-gradient(180deg, #f8fdff, #eef7fc);
       box-shadow: 0 12px 22px rgba(0, 77, 255, 0.08);
+    }
+
+    .difficulty-option.difficulty-beginner .difficulty-radio:checked + .difficulty-copy {
+      background: #e7f5fb;
+      border-color: #c8e5f0;
+    }
+
+    .difficulty-option.difficulty-standard .difficulty-radio:checked + .difficulty-copy {
+      background: #fff1dc;
+      border-color: #f1d5aa;
+    }
+
+    .difficulty-option.difficulty-advanced .difficulty-radio:checked + .difficulty-copy {
+      background: #f0e7ff;
+      border-color: #d9c6f5;
+    }
+
+    .difficulty-radio:checked + .difficulty-copy {
+      border-width: 2px;
+      box-shadow: 0 0 0 3px rgba(42, 157, 143, 0.28), 0 10px 20px rgba(15, 23, 42, 0.08);
     }
 
     .difficulty-name {
@@ -420,6 +456,69 @@
       text-align: center;
     }
 
+    #resultScreen.result-beginner {
+      background: transparent;
+    }
+
+    #resultScreen.result-standard {
+      background: transparent;
+    }
+
+    #resultScreen.result-advanced {
+      background: transparent;
+    }
+
+    #resultScreen.result-beginner .result-hero {
+      background: #e7f5fb;
+      border-color: #c8e5f0;
+    }
+
+    #resultScreen.result-standard .result-hero {
+      background: #fff1dc;
+      border-color: #f1d5aa;
+    }
+
+    #resultScreen.result-advanced .result-hero {
+      background: #f0e7ff;
+      border-color: #d9c6f5;
+    }
+
+    #resultScreen.result-beginner .difficulty-status {
+      background: #e7f5fb;
+      color: #24566d;
+      border: 1px solid #c8e5f0;
+    }
+
+    #resultScreen.result-standard .difficulty-status {
+      background: #fff1dc;
+      color: #76501f;
+      border: 1px solid #f1d5aa;
+    }
+
+    #resultScreen.result-advanced .difficulty-status {
+      background: #f0e7ff;
+      color: #5a3b82;
+      border: 1px solid #d9c6f5;
+    }
+
+    #quizScreen .difficulty-status.difficulty-beginner {
+      background: #e7f5fb;
+      color: #24566d;
+      border: 1px solid #c8e5f0;
+    }
+
+    #quizScreen .difficulty-status.difficulty-standard {
+      background: #fff1dc;
+      color: #76501f;
+      border: 1px solid #f1d5aa;
+    }
+
+    #quizScreen .difficulty-status.difficulty-advanced {
+      background: #f0e7ff;
+      color: #5a3b82;
+      border: 1px solid #d9c6f5;
+    }
+
     .result-rate-label {
       margin: 0;
       color: #436178;
@@ -440,7 +539,44 @@
       margin: 0;
       color: #38546b;
       font-size: 0.92rem;
+      display: none;
     }
+
+    .achievement-art {
+      width: min(240px, 62vw);
+      height: 220px;
+      margin: 8px auto 0;
+      overflow: hidden;
+      background-color: transparent;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: contain;
+      border-radius: 18px;
+    }
+
+    .achievement-message {
+      margin: 2px auto 0;
+      max-width: 520px;
+      color: #38546b;
+      font-size: 1rem;
+      font-weight: 700;
+      line-height: 1.5;
+    }
+
+    .achievement-art-label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+    }
+
+    .achievement-art-learning { background-image: url("assets/achievement/learning.png"); }
+    .achievement-art-flag { background-image: url("assets/achievement/flag.png"); }
+    .achievement-art-cheer { background-image: url("assets/achievement/cheer.png"); }
+    .achievement-art-ally { background-image: url("assets/achievement/ally.png"); }
+    .achievement-art-hero { background-image: url("assets/achievement/hero.png"); }
     .result-head {
       margin: 0 auto 10px;
       width: min(520px, 100%);
@@ -667,7 +803,7 @@
         <p class="difficulty-title">難易度を選択してスタートボタンを押してください。</p>
 
         <div class="difficulty-grid" role="radiogroup" aria-label="難易度選択">
-          <label class="difficulty-option">
+          <label class="difficulty-option difficulty-beginner">
             <input
               class="difficulty-radio"
               type="radio"
@@ -680,7 +816,7 @@
               <span class="difficulty-desc">用語や基礎知識を中心に、まず理解を深めたい方向けです。</span>
             </span>
           </label>
-          <label class="difficulty-option">
+          <label class="difficulty-option difficulty-standard">
             <input
               class="difficulty-radio"
               type="radio"
@@ -693,7 +829,7 @@
               <span class="difficulty-desc">職場での配慮やコミュニケーションの実践を学びたい方向けです。</span>
             </span>
           </label>
-          <label class="difficulty-option">
+          <label class="difficulty-option difficulty-advanced">
             <input
               class="difficulty-radio"
               type="radio"
@@ -751,6 +887,10 @@
         <p class="result-rate-label">達成率</p>
         <p id="resultRate" class="result-rate">0%</p>
         <p id="resultComment" class="result-comment">-</p>
+        <div id="achievementArt" class="achievement-art achievement-art-learning" role="img" aria-label="達成度イラスト">
+          <span id="achievementArtLabel" class="achievement-art-label">学習中の達成度イラスト</span>
+        </div>
+        <p id="achievementMessage" class="achievement-message">まずは一歩。解説を振り返って、もう一度挑戦してみましょう。</p>
       </div>
       <div class="actions center">
         <button id="toStartBtn" class="btn ghost" data-testid="to-start-button">最初に戻る</button>
@@ -787,6 +927,9 @@
     const resultRate = document.getElementById("resultRate");
     const resultComment = document.getElementById("resultComment");
     const resultDifficulty = document.getElementById("resultDifficulty");
+    const achievementArt = document.getElementById("achievementArt");
+    const achievementArtLabel = document.getElementById("achievementArtLabel");
+    const achievementMessage = document.getElementById("achievementMessage");
     const difficultyStatus = document.getElementById("difficultyStatus");
     const startBtn = document.getElementById("startBtn");
     const retryBtn = document.getElementById("retryBtn");
@@ -1075,12 +1218,28 @@
 
     function showResult() {
       setView(resultScreen);
+      resultScreen.classList.remove("result-beginner", "result-standard", "result-advanced");
+      resultScreen.classList.add(`result-${selectedDifficulty}`);
       const total = activeQuestions.length;
       const rate = total > 0 ? Math.round((correct / total) * 100) : 0;
 
       resultRate.textContent = `${rate}%`;
       resultComment.textContent = commentByRate(rate);
       resultDifficulty.textContent = difficultyLabels[selectedDifficulty] || "-";
+
+      const achievement = rate >= 100
+        ? { className: "achievement-art-hero", label: "100パーセント達成のヒーローイラスト", message: "全問正解！すばらしい理解度です。" }
+        : rate >= 80
+          ? { className: "achievement-art-ally", label: "80パーセント以上達成のALLYイラスト", message: "とても良い結果です。学んだことを実践につなげていきましょう。" }
+          : rate >= 60
+            ? { className: "achievement-art-cheer", label: "60パーセント以上達成の応援イラスト", message: "良い調子です。もう少し復習すると、さらに理解が深まります。" }
+            : rate >= 40
+              ? { className: "achievement-art-flag", label: "40パーセント以上達成のフラッグイラスト", message: "基礎をつかめています。解説を振り返ってみましょう。" }
+              : { className: "achievement-art-learning", label: "学習中の達成度イラスト", message: "まずは一歩。解説を振り返って、もう一度挑戦してみましょう。" };
+      achievementArt.className = `achievement-art ${achievement.className}`;
+      achievementArt.setAttribute("aria-label", achievement.label);
+      achievementArtLabel.textContent = achievement.label;
+      achievementMessage.textContent = achievement.message;
     }
 
     function nextQuestion() {
@@ -1110,6 +1269,8 @@
       score = 0;
       correct = 0;
       qTotal.textContent = String(activeQuestions.length);
+      difficultyStatus.classList.remove("difficulty-beginner", "difficulty-standard", "difficulty-advanced");
+      difficultyStatus.classList.add(`difficulty-${selectedDifficulty}`);
       difficultyStatus.textContent = difficultyLabels[selectedDifficulty];
       setView(quizScreen);
       renderQuestion();
